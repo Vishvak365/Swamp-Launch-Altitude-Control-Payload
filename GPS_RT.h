@@ -66,7 +66,7 @@ void initGPS()
 
 void gps_update()
 {
-  Serial.println('updating');
+  Serial.println("updating");
   bool success = false;
   while (!success)
   {
