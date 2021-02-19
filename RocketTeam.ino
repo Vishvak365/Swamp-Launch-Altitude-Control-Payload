@@ -12,24 +12,25 @@ File logger;
 
 String fileName = "test.csv";
 bool debug = TRUE;
+//bool debug = FALSE;
 
 void setup()
 {
   if (debug)
   {
     Serial.begin(115200);
-    initSD_debug();
-    initBMP388_debug();
-    initBME680_debug();
-    initGPS_debug();
+//    initSD_debug();
+//    initBMP388_debug();
+//    initBME680_debug();
+//    initGPS_debug();
     initBNO055_debug();
   }
   else
   {
-    initSD();
-    initBMP388();
-    initBME680();
-    initGPS();
+//    initSD();
+//    initBMP388();
+//    initBME680();
+//    initGPS();
     initBNO055();
   }
   openFile();
@@ -75,30 +76,32 @@ void openFile()
 */
 void printAll()
 {
-  Serial.println("----------GPS DATA----------");
-  gps_print();
-  Serial.println("----------BME680 DATA----------");
-  Serial.println("Pressure: " + String(bme680_getPressure()) + " hPa");
-  Serial.println("Altitude: " + String(bme680_getAltitude()) + " m");
-  Serial.println("Temperature: " + String(bme680_getTemperature()) + " C");
-  Serial.println("Humidity: " + String(bme680_getHumidity()) + "%");
-  Serial.println("Gas: " + String(bme680_getGas()) + " kOm/s^2m hms");
+    Serial.println(" z: " + String(bno055_getAcceleration().z));
 
-  Serial.println("----------BMP388 DATA----------");
-  Serial.println("Pressure: " + String(bmp388_getPressure()) + " hPa");
-  Serial.println("Altitude: " + String(bmp388_getAltitude()) + " m");
-  Serial.println("Temperature: " + String(bmp388_getTemperature()) + " C");
+//  Serial.println("----------GPS DATA----------");
+//  gps_print();
+//  Serial.println("----------BME680 DATA----------");
+//  Serial.println("Pressure: " + String(bme680_getPressure()) + " hPa");
+//  Serial.println("Altitude: " + String(bme680_getAltitude()) + " m");
+//  Serial.println("Temperature: " + String(bme680_getTemperature()) + " C");
+//  Serial.println("Humidity: " + String(bme680_getHumidity()) + "%");
+//  Serial.println("Gas: " + String(bme680_getGas()) + " kOm/s^2m hms");
+//
+//  Serial.println("----------BMP388 DATA----------");
+//  Serial.println("Pressure: " + String(bmp388_getPressure()) + " hPa");
+//  Serial.println("Altitude: " + String(bmp388_getAltitude()) + " m");
+//  Serial.println("Temperature: " + String(bmp388_getTemperature()) + " C");
 
-  Serial.println("----------BNO055 DATA----------");
-  Serial.println("Acceleration: x: " + String(bno055_getAcceleration().x) + " y: " + String(bno055_getAcceleration().y) + " z: " + String(bno055_getAcceleration().z) + " m/s^2");
-  Serial.println("Orientation: x: " + String(bno055_getOrientation().x) + " y: " + String(bno055_getOrientation().y) + " z: " + String(bno055_getOrientation().z) + " degrees");
-  Serial.println("Gravity: x: " + String(bno055_getGravity().x) + " y: " + String(bno055_getGravity().y) + " z: " + String(bno055_getGravity().z) + " m/s^2");
-  Serial.println("Angular Velocity: x: " + String(bno055_getAngularVelocity().x) + " y: " + String(bno055_getAngularVelocity().y) + " z: " + String(bno055_getAngularVelocity().z) + " rad/s");
-  Serial.println("Linear Acceleration: x: " + String(bno055_getLinearAcceleration().x) + " y: " + String(bno055_getLinearAcceleration().y) + " z: " + String(bno055_getLinearAcceleration().z) + " m/s^2");
-  Serial.println("Magnetism: x: " + String(bno055_getMagnetism().x) + " y: " + String(bno055_getMagnetism().y) + " z: " + String(bno055_getMagnetism().z) + " uT");
-
-  Serial.println("----------END DATA----------");
-  Serial.println();
+//  Serial.println("----------BNO055 DATA----------");
+//  Serial.println("Acceleration: x: " + String(bno055_getAcceleration().x) + " y: " + String(bno055_getAcceleration().y) + " z: " + String(bno055_getAcceleration().z) + " m/s^2");
+//  Serial.println("Orientation: x: " + String(bno055_getOrientation().x) + " y: " + String(bno055_getOrientation().y) + " z: " + String(bno055_getOrientation().z) + " degrees");
+//  Serial.println("Gravity: x: " + String(bno055_getGravity().x) + " y: " + String(bno055_getGravity().y) + " z: " + String(bno055_getGravity().z) + " m/s^2");
+//  Serial.println("Angular Velocity: x: " + String(bno055_getAngularVelocity().x) + " y: " + String(bno055_getAngularVelocity().y) + " z: " + String(bno055_getAngularVelocity().z) + " rad/s");
+//  Serial.println("Linear Acceleration: x: " + String(bno055_getLinearAcceleration().x) + " y: " + String(bno055_getLinearAcceleration().y) + " z: " + String(bno055_getLinearAcceleration().z) + " m/s^2");
+//  Serial.println("Magnetism: x: " + String(bno055_getMagnetism().x) + " y: " + String(bno055_getMagnetism().y) + " z: " + String(bno055_getMagnetism().z) + " uT");
+//
+//  Serial.println("----------END DATA----------");
+//  Serial.println();
 }
 
 void logData()

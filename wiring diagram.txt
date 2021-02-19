@@ -1,0 +1,4 @@
+Red -> Black
+Green -> Green
+Yellow -> Red
+Blue -> Blue

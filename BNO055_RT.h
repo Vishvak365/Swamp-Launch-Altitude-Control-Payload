@@ -70,10 +70,11 @@ bool calibrateDebug()
   Serial.print(" M:");
   Serial.println(mag, DEC);
   delay(100);
-  if (sys == 3)
-    return true;
-  else
-    return false;
+  return true;
+//  if (sys == 3)
+//    return true;
+//  else
+//    return false;
 }
 
 bool calibrate()

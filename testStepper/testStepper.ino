@@ -1,6 +1,11 @@
 // Include the Arduino Stepper Library
 #include <Stepper.h>
 //https://lastminuteengineers.com/stepper-motor-l293d-arduino-tutorial/
+// In the above website use this wiring color translation
+// Red -> Black
+// Green -> Green
+// Yellow -> Red
+// Blue -> Blue
 // Number of steps per output rotation
 const int stepsPerRevolution = 100;
 
