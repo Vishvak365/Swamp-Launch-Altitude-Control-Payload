@@ -15,10 +15,11 @@ void initGPS_debug()
   Serial.println(F("GPS Initialization Debug"));
 
   GPS.begin(9600);
-  //if (!GPS.begin(9600)){
-  //Serial.println("Could not find a valid GPS sensor, check wiring!");
-  //}
-  //else{
+  if (!GPS.begin(9600))
+  {
+    Serial.println("Could not find a valid GPS sensor, check wiring!");
+  }
+  // else{
   // turn on RMC (recommended minimum) and GGA (fix data) including altitude
 
   // For the parsing code to work nicely and have time to sort thru the data, and
@@ -33,10 +34,11 @@ void initGPS_debug()
 
   //Wait for GPS to get satelite fix
   Serial.println("Waiting for GPS to connect to satellite...");
-  /*(gps_update();
-    while(!GPS.fix){
-      gps_update();
-    }*/
+  gps_update();
+  while (!GPS.fix)
+  {
+    gps_update();
+  }
   gps_print();
 
   Serial.println("GPS sensor successfully initialized!");

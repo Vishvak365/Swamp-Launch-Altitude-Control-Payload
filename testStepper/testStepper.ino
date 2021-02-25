@@ -1,6 +1,6 @@
 // Include the Arduino Stepper Library
 #include <Stepper.h>
-//https://lastminuteengineers.com/stepper-motor-l293d-arduino-tutorial/
+//  
 // In the above website use this wiring color translation
 // Red -> Black
 // Green -> Green
