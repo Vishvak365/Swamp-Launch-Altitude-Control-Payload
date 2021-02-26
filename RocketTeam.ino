@@ -4,6 +4,7 @@
 #include "GPS_RT.h"
 #include "BNO055_RT.h"
 #include "Triple.h"
+#include "Stepper_Control.h"
 #include <String.h>
 void openFile();
 void printAll();
@@ -19,11 +20,13 @@ void setup()
   if (debug)
   {
     Serial.begin(115200);
-    initSD_debug();
-    initBMP388_debug();
-    initBME680_debug();
-    initGPS_debug();
-    initBNO055_debug();
+    // initSD_debug();
+    // initBMP388_debug();
+    // initBME680_debug();
+    // initGPS_debug();
+    // initBNO055_debug();
+    initStepper_debug();
+    testStepperMotor();
   }
   else
   {
@@ -34,6 +37,8 @@ void setup()
     initBNO055();
   }
   openFile();
+  // .1875
+  // .189
   //File Header
   logger.println("GPS DATA,,,,,,,,,,,BME680 DATA,,,,,BMP388 DATA,,,BNO055 DATA,,,,,,,,,,,,,,,,,");
   logger.println("Date,HH:MM:SS,Millis,Fix,Fix Quality,Satellites,Latitude,Longitude,Altitude (m),Speed (knots),Angle (degrees),Pressure (hPa),Altitude (m),Temperature (C),Humidity (%),Gas (kOhms),Pressure (hPa),Altitude (m),Temperature (C),Acceleration (m/s^2),,,Orientation (degrees),,,Gravity (m/s^2),,,Angular Velocity (rad/s),,,Linear Acceleration (m/s^2),,,Magnetism (uT),,");
@@ -56,7 +61,10 @@ void loop()
   Serial.println("updated!");
   // delay(10);
 }
-
+void testStepperMotor()
+{
+  stepper_rotate(2000, false);
+}
 void openFile()
 {
 
