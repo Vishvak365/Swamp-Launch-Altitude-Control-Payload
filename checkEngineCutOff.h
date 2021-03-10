@@ -3,6 +3,7 @@ double maxAcceleration = 0;
 /*
     @description : checks acceleration to see if engine has been cut off
     @returns : true if engine cutoff detected; false if if not
+    @acceleration : current acceleration
 */
 bool checkEngineCutOff(double acceleration)
 {
