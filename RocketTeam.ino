@@ -6,6 +6,7 @@
 #include "Triple.h"
 #include "Stepper_Control.h"
 #include <String.h>
+#include "checkEngineCutOff.h"
 void openFile();
 void printAll();
 void logData();
@@ -21,12 +22,12 @@ void setup()
   {
     Serial.begin(115200);
     // initSD_debug();
-    // initBMP388_debug();
+    initBMP388_debug();
     // initBME680_debug();
     // initGPS_debug();
-    // initBNO055_debug();
-    initStepper_debug();
-    testStepperMotor();
+    initBNO055_debug();
+    // initStepper_debug();
+    // testStepperMotor();
   }
   else
   {
@@ -56,8 +57,8 @@ void loop()
   //gps_update();
   if (debug)
     printAll();
-
-  logData();
+  checkEngineCutOff();
+  // logData();/
   Serial.println("updated!");
   // delay(10);
 }
@@ -86,14 +87,14 @@ void printAll()
 {
   // Serial.println(" z: " + String(bno055_getAcceleration().z));
 
-  Serial.println("----------GPS DATA----------");
-  gps_print();
-  Serial.println("----------BME680 DATA----------");
-  Serial.println("Pressure: " + String(bme680_getPressure()) + " hPa");
-  Serial.println("Altitude: " + String(bme680_getAltitude()) + " m");
-  Serial.println("Temperature: " + String(bme680_getTemperature()) + " C");
-  Serial.println("Humidity: " + String(bme680_getHumidity()) + "%");
-  Serial.println("Gas: " + String(bme680_getGas()) + " kOm/s^2m hms");
+  // Serial.println("----------GPS DATA----------");
+  // gps_print();
+  // Serial.println("----------BME680 DATA----------");
+  // Serial.println("Pressure: " + String(bme680_getPressure()) + " hPa");
+  // Serial.println("Altitude: " + String(bme680_getAltitude()) + " m");
+  // Serial.println("Temperature: " + String(bme680_getTemperature()) + " C");
+  // Serial.println("Humidity: " + String(bme680_getHumidity()) + "%");
+  // Serial.println("Gas: " + String(bme680_getGas()) + " kOm/s^2m hms");
 
   Serial.println("----------BMP388 DATA----------");
   Serial.println("Pressure: " + String(bmp388_getPressure()) + " hPa");
