@@ -11,6 +11,7 @@
 
 #ifndef BMP388_RT
 #define BMP388_RT
+const baseline_altitude = 6;
 
 Adafruit_BMP3XX bmp; // I2C
 void initBMP388_debug()

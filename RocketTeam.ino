@@ -7,6 +7,7 @@
 #include "Stepper_Control.h"
 #include <String.h>
 #include "checkEngineCutOff.h"
+#include "ACS_Calculations.h"
 void openFile();
 void printAll();
 void logData();
@@ -51,16 +52,61 @@ void setup()
 //Each sensor has prewritten functions to get the data ex. bme680_getTemperature stored in header files
 //FOR GPS: you must call GPS.getDATA() (refer to GPS_print() function in GPS_RT.h)
 //gps_update(); must be called in order to update GPS data
-
+bool engineIsCutOff = false;
 void loop()
 {
   //gps_update();
   if (debug)
+  {
     printAll();
-  checkEngineCutOff();
-  // logData();/
+  }
+  // Check for initial engine cut off
+  if (checkEngineCutOff() && engineIsCutOff == false)
+  {
+    unsigned long StartTime = millis();
+    unsigned long CurrTime = millis();
+    //wait 2500 ms before getting initial conditions
+    while (CurrTime - StartTime < 2500)
+    {
+      logData();
+      CurrTime = millis();
+    }
+    engineIsCutOff = true;
+    double curr_velocity = calcVelocity();
+    //!TODO Get the velocity values u = v_o + at
+    //!TODO Get for all axis (x,y,z)
+    setInitialConditions(curr_velocity, curr_acceleration, curr_altitude, 1, 1);
+  }
+  // Check to see if the engine has been previously cut off (cruising state)
+  if (engineIsCutOff && deployFins == false)
+  {
+    double curr_velocity = calcVelocity();
+    bool deployFins = checkDeployFins(curr_velocity, curr_acceleration, curr_altitude, 1, 1);
+    if (deployFins)
+    {
+      // open
+      stepper_rotate(560, false);
+      unsigned long StartTime = millis();
+      unsigned long CurrTime = millis();
+      //wait 5 seconds before closing
+      while (CurrTime - StartTime < 5000)
+      {
+        logData();
+        CurrTime = millis();
+      }
+      stepper_rotate(560, true);
+    }
+  }
+
+  // Logs data from sensors to SD Card
+  logData();
+
   Serial.println("updated!");
-  // delay(10);
+}
+
+double calcVelocity()
+{
+  return 1;
 }
 void testStepperMotor()
 {
