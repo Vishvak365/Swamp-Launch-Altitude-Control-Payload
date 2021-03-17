@@ -72,10 +72,11 @@ void loop()
       CurrTime = millis();
     }
     engineIsCutOff = true;
-    double curr_velocity = calcVelocity();
     //!TODO Get the velocity values u = v_o + at
     //!TODO Get for all axis (x,y,z)
-    setInitialConditions(curr_velocity, curr_acceleration, curr_altitude, 1, 1);
+    double[] accelerationArray = {bno055_getAcceleration().x, bno055_getAcceleration().y, bno055_getAcceleration().z};
+    double curr_altitude = bmp388_getAltitude();
+    setInitialConditions(calcVelocity(), accelerationArray, curr_altitude, 1, 1);
   }
   // Check to see if the engine has been previously cut off (cruising state)
   if (engineIsCutOff && deployFins == false)
@@ -103,10 +104,26 @@ void loop()
 
   Serial.println("updated!");
 }
-
-double calcVelocity()
+double prevVelocity_X = 0;
+double prevVelocity_Y = 0;
+double prevVelocity_Z = 0;
+double prevTime = millis();
+/*
+  @returns [currVelocity_X, currVelocity_Y, currVelocity_Z]
+*/
+double[] calcVelocity()
 {
-  return 1;
+  double currVelocity_X = prevVelocity + ((bno055_getAcceleration().x) * (millis() - prevTime));
+  double currVelocity_Y = prevVelocity + ((bno055_getAcceleration().y) * (millis() - prevTime));
+  double currVelocity_Z = prevVelocity + ((bno055_getAcceleration().z) * (millis() - prevTime));
+  prevTime = millis();
+  double prevVelocity_X = currVelocity_X;
+  double prevVelocity_Y = currVelocity_Y;
+  double prevVelocity_Z = currVelocity_Z;
+  double velocity_array[] = {currVelocity_X,
+                             currVelocity_Y,
+                             currVelocity_Z};
+  return velocity_array;
 }
 void testStepperMotor()
 {
