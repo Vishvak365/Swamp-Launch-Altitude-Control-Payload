@@ -1,4 +1,5 @@
 #include "BNO055_RT.h"
+#include "Triple.h"
 double alpha = .05;
 double maxAcceleration = 0;
 /*
@@ -19,22 +20,21 @@ bool checkEngineCutOff(double acceleration)
     }
 }
 
-double prevVelocity_X = 0;
-double prevVelocity_Y = 0;
-double prevVelocity_Z = 0;
+Triple prevVelocity = 0;
 double prevTime = millis();
 /*
-  @returns [currVelocity_X, currVelocity_Y, currVelocity_Z]
+  @returns Triple velocity
 */
-double *calcVelocity()
+Triple calcVelocity(Triple acceleration)
 {
-    double currVelocity_X = prevVelocity_X + ((bno055_getAcceleration().x) * (millis() - prevTime));
-    double currVelocity_Y = prevVelocity_Y + ((bno055_getAcceleration().y) * (millis() - prevTime));
-    double currVelocity_Z = prevVelocity_Z + ((bno055_getAcceleration().z) * (millis() - prevTime));
+    Triple velocity;
+    velocity.x = prevVelocity_X + ((acceleration().x) * (millis() - prevTime));
+    velocity.y = prevVelocity_Y + ((acceleration().y) * (millis() - prevTime));
+    velocity.z = prevVelocity_Z + ((acceleration().z) * (millis() - prevTime));
+
     prevTime = millis();
-    double prevVelocity_X = currVelocity_X;
-    double prevVelocity_Y = currVelocity_Y;
-    double prevVelocity_Z = currVelocity_Z;
-    static double velocity_array[] = {currVelocity_X, currVelocity_Y, currVelocity_Z};
-    return velocity_array;
+    double prevVelocity_X = velocity.x;
+    double prevVelocity_Y = velocity.y;
+    double prevVelocity_Z = velocity.z;
+    return velocity;
 }

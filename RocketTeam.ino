@@ -60,8 +60,13 @@ void loop()
   {
     printAll();
   }
+  Triple curr_acceleration;
+  curr_acceleration.x = bno055_getLinearAcceleration().x;
+  curr_acceleration.y = bno055_getLinearAcceleration().y;
+  curr_acceleration.z = bno055_getLinearAcceleration().z;
+  Triple curr_velocity = calcVelocity(curr_acceleration);
   // Check for initial engine cut off
-  if (checkEngineCutOff(bno055_getAcceleration().x) && engineIsCutOff == false)
+  if (checkEngineCutOff(curr_acceleration.x) && engineIsCutOff == false)
   {
     unsigned long StartTime = millis();
     unsigned long CurrTime = millis();
@@ -72,16 +77,16 @@ void loop()
       CurrTime = millis();
     }
     engineIsCutOff = true;
-    double curr_acceleration[] = {bno055_getAcceleration().x, bno055_getAcceleration().y, bno055_getAcceleration().z};
+
     double curr_altitude = bmp388_getAltitude();
-    setInitialConditions(calcVelocity(), curr_acceleration, bmp388_getAltitude(), 90.0);
+
+    setInitialConditions(curr_velocity, curr_acceleration, bmp388_getAltitude(), 90.0);
   }
   // Check to see if the engine has been previously cut off (cruising state)
   bool deployFins = false;
   if (engineIsCutOff && deployFins == false)
   {
-    double *curr_velocity = calcVelocity();
-    double curr_acceleration[] = {bno055_getAcceleration().x, bno055_getAcceleration().y, bno055_getAcceleration().z};
+
     bool deployFins = checkDeployFins(curr_velocity, curr_acceleration, bmp388_getAltitude(), 90.0);
     if (deployFins)
     {

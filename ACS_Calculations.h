@@ -1,10 +1,12 @@
 #include "Adafruit_BME680.h"
-double init_acceleration[3];
-double init_velocity[3];
+// double init_acceleration[3];
+// double init_velocity[3];
+Triple init_acceleration;
+Triple init_velocity;
 double init_altitude;
 double init_angle;
 
-bool checkDeployFins(double curr_velocity[3], double curr_acceleration[3], double curr_altitude, double curr_angle)
+bool checkDeployFins(Triple curr_velocity, Triple curr_acceleration, double curr_altitude, double curr_angle)
 {
     //Dimensions and Properties
     double rho = 1.225;               // [kg*km^-3*s^-2]Constant for now, but should be from sensor, and should vary
@@ -49,15 +51,16 @@ bool checkDeployFins(double curr_velocity[3], double curr_acceleration[3], doubl
         return false;
     }
 }
-void setInitialConditions(double curr_velocity[3], double curr_acceleration[3], double curr_altitude, double curr_angle)
+void setInitialConditions(Triple curr_velocity, Triple curr_acceleration, double curr_altitude, double curr_angle)
 {
-    init_velocity[0] = curr_velocity[0];
-    init_velocity[1] = curr_velocity[1];
-    init_velocity[2] = curr_velocity[2];
+    init_velocity.x = curr_velocity.x;
+    init_velocity.y = curr_velocity.y;
+    init_velocity.z = curr_velocity.z;
 
-    init_acceleration[0] = curr_acceleration[0];
-    init_acceleration[1] = curr_acceleration[1];
-    init_acceleration[2] = curr_acceleration[2];
+    init_acceleration.x = curr_acceleration.x;
+    init_acceleration.y = curr_acceleration.y;
+    init_acceleration.y = curr_acceleration.z;
+
     init_altitude = curr_altitude;
     init_angle = curr_angle;
 }
