@@ -6,7 +6,7 @@
 #include "Triple.h"
 #include "Stepper_Control.h"
 #include <String.h>
-#include "checkEngineCutOff.h"
+#include "Calculations.h"
 #include "ACS_Calculations.h"
 void openFile();
 void printAll();
@@ -61,7 +61,7 @@ void loop()
     printAll();
   }
   // Check for initial engine cut off
-  if (checkEngineCutOff() && engineIsCutOff == false)
+  if (checkEngineCutOff(bno055_getAcceleration().x) && engineIsCutOff == false)
   {
     unsigned long StartTime = millis();
     unsigned long CurrTime = millis();
@@ -72,17 +72,17 @@ void loop()
       CurrTime = millis();
     }
     engineIsCutOff = true;
-    //!TODO Get the velocity values u = v_o + at
-    //!TODO Get for all axis (x,y,z)
-    double[] accelerationArray = {bno055_getAcceleration().x, bno055_getAcceleration().y, bno055_getAcceleration().z};
+    double curr_acceleration[] = {bno055_getAcceleration().x, bno055_getAcceleration().y, bno055_getAcceleration().z};
     double curr_altitude = bmp388_getAltitude();
-    setInitialConditions(calcVelocity(), accelerationArray, curr_altitude, 1, 1);
+    setInitialConditions(calcVelocity(), curr_acceleration, bmp388_getAltitude(), 90.0);
   }
   // Check to see if the engine has been previously cut off (cruising state)
+  bool deployFins = false;
   if (engineIsCutOff && deployFins == false)
   {
-    double curr_velocity = calcVelocity();
-    bool deployFins = checkDeployFins(curr_velocity, curr_acceleration, curr_altitude, 1, 1);
+    double *curr_velocity = calcVelocity();
+    double curr_acceleration[] = {bno055_getAcceleration().x, bno055_getAcceleration().y, bno055_getAcceleration().z};
+    bool deployFins = checkDeployFins(curr_velocity, curr_acceleration, bmp388_getAltitude(), 90.0);
     if (deployFins)
     {
       // open
@@ -104,27 +104,7 @@ void loop()
 
   Serial.println("updated!");
 }
-double prevVelocity_X = 0;
-double prevVelocity_Y = 0;
-double prevVelocity_Z = 0;
-double prevTime = millis();
-/*
-  @returns [currVelocity_X, currVelocity_Y, currVelocity_Z]
-*/
-double[] calcVelocity()
-{
-  double currVelocity_X = prevVelocity + ((bno055_getAcceleration().x) * (millis() - prevTime));
-  double currVelocity_Y = prevVelocity + ((bno055_getAcceleration().y) * (millis() - prevTime));
-  double currVelocity_Z = prevVelocity + ((bno055_getAcceleration().z) * (millis() - prevTime));
-  prevTime = millis();
-  double prevVelocity_X = currVelocity_X;
-  double prevVelocity_Y = currVelocity_Y;
-  double prevVelocity_Z = currVelocity_Z;
-  double velocity_array[] = {currVelocity_X,
-                             currVelocity_Y,
-                             currVelocity_Z};
-  return velocity_array;
-}
+
 void testStepperMotor()
 {
   stepper_rotate(2000, false);

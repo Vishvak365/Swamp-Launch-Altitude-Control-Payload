@@ -1,9 +1,10 @@
-double[] init_acceleration;
-double[] init_velocity;
+#include "Adafruit_BME680.h"
+double init_acceleration[3];
+double init_velocity[3];
 double init_altitude;
 double init_angle;
 
-bool checkDeployFins(double[] curr_velocity, double[] curr_acceleration, double curr_altitude, double curr_angle)
+bool checkDeployFins(double curr_velocity[3], double curr_acceleration[3], double curr_altitude, double curr_angle)
 {
     //Dimensions and Properties
     double rho = 1.225;               // [kg*km^-3*s^-2]Constant for now, but should be from sensor, and should vary
@@ -20,6 +21,7 @@ bool checkDeployFins(double[] curr_velocity, double[] curr_acceleration, double 
     double W = m * g;              // [N] Weight
     double B = 0.5 * rho * S * cd; // [m^2*s^-2] Drag Constant
 
+    //TODO FIX to get correct velocity
     double a = B * init_velocity * init_velocity;
     double b = pow(e, (2 * B) / (m * dy));
 
@@ -28,8 +30,8 @@ bool checkDeployFins(double[] curr_velocity, double[] curr_acceleration, double 
     double DelA = targetV / ext;     //Acceleration Required to Slow velocity by ext seconds
 
     //Calculate Deploy Velocity
-    double cd = cd + 0.09;
-    double S = 0.03293858;
+    cd = cd + 0.09;
+    S = 0.03293858;
     double Vd = sqrt((2 * DelA * m) / (rho * S * cd));
     if (Vd > 200)
     {
@@ -47,10 +49,15 @@ bool checkDeployFins(double[] curr_velocity, double[] curr_acceleration, double 
         return false;
     }
 }
-void setInitialConditions(double[] curr_velocity, double[] curr_acceleration, double curr_altitude, double curr_angle)
+void setInitialConditions(double curr_velocity[3], double curr_acceleration[3], double curr_altitude, double curr_angle)
 {
-    init_velocity = velocity;
-    init_acceleration = acceleration;
-    init_altitude = altitude;
-    init_angle = angle;
+    init_velocity[0] = curr_velocity[0];
+    init_velocity[1] = curr_velocity[1];
+    init_velocity[2] = curr_velocity[2];
+
+    init_acceleration[0] = curr_acceleration[0];
+    init_acceleration[1] = curr_acceleration[1];
+    init_acceleration[2] = curr_acceleration[2];
+    init_altitude = curr_altitude;
+    init_angle = curr_angle;
 }
