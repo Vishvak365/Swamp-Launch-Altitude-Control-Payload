@@ -33,7 +33,7 @@ void initBMP388_debug()
   // bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
   // bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
   bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_2X);
-  bmp.setPressureOversampling(BMP3_OVERSAMPLING_1X);
+  bmp.setPressureOversampling(BMP3_OVERSAMPLING_2X);
   bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_1);
   //bmp.setOutputDataRate(BMP3_ODR_50_HZ);
 }
@@ -43,7 +43,7 @@ void initBMP388()
   bmp.begin();
   // Set up oversampling and filter initialization
   bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_2X);
-  bmp.setPressureOversampling(BMP3_OVERSAMPLING_1X);
+  bmp.setPressureOversampling(BMP3_OVERSAMPLING_2X);
   bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_1);
   //bmp.setOutputDataRate(BMP3_ODR_50_HZ);
 }

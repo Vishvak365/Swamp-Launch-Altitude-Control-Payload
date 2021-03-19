@@ -34,7 +34,7 @@ void setup()
   {
     initSD();
     initBMP388();
-    initBME680();
+    // initBME680();
     initGPS();
     initBNO055();
   }
@@ -64,6 +64,10 @@ void loop()
   curr_acceleration.x = bno055_getLinearAcceleration().x;
   curr_acceleration.y = bno055_getLinearAcceleration().y;
   curr_acceleration.z = bno055_getLinearAcceleration().z;
+  Triple curr_angle;
+  curr_angle.x = bno055_getOrientation().x;
+  curr_angle.y = bno055_getOrientation().y;
+  curr_angle.z = bno055_getOrientation().z;
   Triple curr_velocity = calcVelocity(curr_acceleration);
   // Check for initial engine cut off
   if (checkEngineCutOff(curr_acceleration.x) && engineIsCutOff == false)
@@ -73,21 +77,21 @@ void loop()
     //wait 2500 ms before getting initial conditions
     while (CurrTime - StartTime < 2500)
     {
-      logData();
+      // logData();
       CurrTime = millis();
     }
     engineIsCutOff = true;
 
     double curr_altitude = bmp388_getAltitude();
 
-    setInitialConditions(curr_velocity, curr_acceleration, bmp388_getAltitude(), 90.0);
+    setInitialConditions(curr_velocity, curr_acceleration, bmp388_getAltitude(), curr_angle);
   }
   // Check to see if the engine has been previously cut off (cruising state)
   bool deployFins = false;
   if (engineIsCutOff && deployFins == false)
   {
 
-    bool deployFins = checkDeployFins(curr_velocity, curr_acceleration, bmp388_getAltitude(), 90.0);
+    bool deployFins = checkDeployFins(curr_velocity, curr_acceleration, bmp388_getAltitude(), curr_angle);
     if (deployFins)
     {
       // open
@@ -97,7 +101,7 @@ void loop()
       //wait 5 seconds before closing
       while (CurrTime - StartTime < 5000)
       {
-        logData();
+        // logData();
         CurrTime = millis();
       }
       stepper_rotate(560, true);
@@ -105,9 +109,9 @@ void loop()
   }
 
   // Logs data from sensors to SD Card
-  logData();
+  // logData();
 
-  Serial.println("updated!");
+  // Serial.println("updated!");
 }
 
 void testStepperMotor()
@@ -133,7 +137,6 @@ void openFile()
 */
 void printAll()
 {
-  // Serial.println(" z: " + String(bno055_getAcceleration().z));
 
   // Serial.println("----------GPS DATA----------");
   // gps_print();
@@ -144,21 +147,24 @@ void printAll()
   // Serial.println("Humidity: " + String(bme680_getHumidity()) + "%");
   // Serial.println("Gas: " + String(bme680_getGas()) + " kOm/s^2m hms");
 
-  Serial.println("----------BMP388 DATA----------");
-  Serial.println("Pressure: " + String(bmp388_getPressure()) + " hPa");
-  Serial.println("Altitude: " + String(bmp388_getAltitude()) + " m");
-  Serial.println("Temperature: " + String(bmp388_getTemperature()) + " C");
+  // Serial.println("----------BMP388 DATA----------");
+  // Serial.println("Pressure: " + String(bmp388_getPressure()) + " hPa");
+  // Serial.println("Altitude: " + String(bmp388_getAltitude()) + " m");
+  // Serial.println("Temperature: " + String(bmp388_getTemperature()) + " C");
 
-  Serial.println("----------BNO055 DATA----------");
-  Serial.println("Acceleration: x: " + String(bno055_getAcceleration().x) + " y: " + String(bno055_getAcceleration().y) + " z: " + String(bno055_getAcceleration().z) + " m/s^2");
+  // Serial.println("----------BNO055 DATA----------");
+  // Serial.println("Acceleration: x: " + String(bno055_getAcceleration().x) + " y: " + String(bno055_getAcceleration().y) + " z: " + String(bno055_getAcceleration().z) + " m/s^2");
+  // Serial.println("Orientation: x: " + String(bno055_getOrientation().x) + " y: " + String(bno055_getOrientation().y) + " z: " + String(bno055_getOrientation().z) + " degrees");
+  // Serial.println("Gravity: x: " + String(bno055_getGravity().x) + " y: " + String(bno055_getGravity().y) + " z: " + String(bno055_getGravity().z) + " m/s^2");
+  // Serial.println("Angular Velocity: x: " + String(bno055_getAngularVelocity().x) + " y: " + String(bno055_getAngularVelocity().y) + " z: " + String(bno055_getAngularVelocity().z) + " rad/s");
+  // Serial.println("Linear Acceleration: x: " + String(bno055_getLinearAcceleration().x) + " y: " + String(bno055_getLinearAcceleration().y) + " z: " + String(bno055_getLinearAcceleration().z) + " m/s^2");
+  // Serial.println("Magnetism: x: " + String(bno055_getMagnetism().x) + " y: " + String(bno055_getMagnetism().y) + " z: " + String(bno055_getMagnetism().z) + " uT");
+  // //
+  // Serial.println("----------END DATA----------");
+  // Serial.println();
   Serial.println("Orientation: x: " + String(bno055_getOrientation().x) + " y: " + String(bno055_getOrientation().y) + " z: " + String(bno055_getOrientation().z) + " degrees");
-  Serial.println("Gravity: x: " + String(bno055_getGravity().x) + " y: " + String(bno055_getGravity().y) + " z: " + String(bno055_getGravity().z) + " m/s^2");
-  Serial.println("Angular Velocity: x: " + String(bno055_getAngularVelocity().x) + " y: " + String(bno055_getAngularVelocity().y) + " z: " + String(bno055_getAngularVelocity().z) + " rad/s");
-  Serial.println("Linear Acceleration: x: " + String(bno055_getLinearAcceleration().x) + " y: " + String(bno055_getLinearAcceleration().y) + " z: " + String(bno055_getLinearAcceleration().z) + " m/s^2");
-  Serial.println("Magnetism: x: " + String(bno055_getMagnetism().x) + " y: " + String(bno055_getMagnetism().y) + " z: " + String(bno055_getMagnetism().z) + " uT");
-  //
-  Serial.println("----------END DATA----------");
-  Serial.println();
+  // Serial.println("Linear Acceleration: x: " + String(bno055_getLinearAcceleration().x) + " y: " + String(bno055_getLinearAcceleration().y) + " z: " + String(bno055_getLinearAcceleration().z) + " m/s^2");
+  delay(100);
 }
 
 void logData()
@@ -225,15 +231,25 @@ void logData()
   logger.print(",");
 
   //BME680 DATA
-  logger.print(String(bme680_getPressure()));
+  // logger.print(String(bme680_getPressure()));
+  // logger.print(",");
+  // logger.print(String(bme680_getAltitude()));
+  // logger.print(",");
+  // logger.print(String(bme680_getTemperature()));
+  // logger.print(",");
+  // logger.print(String(bme680_getHumidity()));
+  // logger.print(",");
+  // logger.print(String(bme680_getGas()));
+  // logger.print(",");
+  logger.print("0");
   logger.print(",");
-  logger.print(String(bme680_getAltitude()));
+  logger.print("0");
   logger.print(",");
-  logger.print(String(bme680_getTemperature()));
+  logger.print("0");
   logger.print(",");
-  logger.print(String(bme680_getHumidity()));
+  logger.print("0");
   logger.print(",");
-  logger.print(String(bme680_getGas()));
+  logger.print("0");
   logger.print(",");
 
   //BMP388 DATA

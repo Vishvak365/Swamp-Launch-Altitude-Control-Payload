@@ -21,7 +21,7 @@ void initStepper(int speed)
 }
 void initStepper_debug()
 {
-    Serial.println(F("Stepper motor initialized with default speed"));
+    // Serial.println(F("Stepper motor initialized with default speed"));
     stepper.setSpeed(defaultSpeed);
     Serial.begin(9600);
 }
