@@ -19,6 +19,7 @@ bool debug = TRUE;
 
 void setup()
 {
+  initCalculationValues();
   if (debug)
   {
     Serial.begin(115200);
@@ -48,7 +49,7 @@ void setup()
   logger.close();
   //TODO: Set init indicator to true
 }
-
+double rocketIgnitionTime = 0;
 //Each sensor has prewritten functions to get the data ex. bme680_getTemperature stored in header files
 //FOR GPS: you must call GPS.getDATA() (refer to GPS_print() function in GPS_RT.h)
 //gps_update(); must be called in order to update GPS data
@@ -69,11 +70,18 @@ void loop()
   curr_angle.y = bno055_getOrientation().y;
   curr_angle.z = bno055_getOrientation().z;
   Triple curr_velocity = calcVelocity(curr_acceleration);
+  Serial.println("x : " + String(curr_velocity.x) + " y : " + String(curr_velocity.y) + " z " + String(curr_velocity.z));
   // Check for initial engine cut off
-  if (checkEngineCutOff(curr_acceleration.x) && engineIsCutOff == false)
+  if (rocketIgnitionTime == 0 && curr_acceleration.x > 10)
+  {
+    Serial.println("Rocket Ignited");
+    rocketIgnitionTime = millis();
+  }
+  if (rocketIgnitionTime != 0 && checkEngineCutOff(curr_acceleration.x) && engineIsCutOff == false)
   {
     unsigned long StartTime = millis();
     unsigned long CurrTime = millis();
+    Serial.println("Engine Cutoff");
     //wait 2500 ms before getting initial conditions
     while (CurrTime - StartTime < 2500)
     {
@@ -81,7 +89,7 @@ void loop()
       CurrTime = millis();
     }
     engineIsCutOff = true;
-
+    Serial.println("Setting initial conditions for ACS calculations");
     double curr_altitude = bmp388_getAltitude();
 
     setInitialConditions(curr_velocity, curr_acceleration, bmp388_getAltitude(), curr_angle);
@@ -92,8 +100,9 @@ void loop()
   {
 
     bool deployFins = checkDeployFins(curr_velocity, curr_acceleration, bmp388_getAltitude(), curr_angle);
-    if (deployFins)
+    if (deployFins && (millis() - rocketIgnitionTime) > 4000)
     {
+      Serial.println("Fins Deployed");
       // open
       stepper_rotate(560, false);
       unsigned long StartTime = millis();
@@ -112,6 +121,8 @@ void loop()
   // logData();
 
   // Serial.println("updated!");
+  // Delay needed to deal with sporatic data
+  delay(100);
 }
 
 void testStepperMotor()
@@ -162,9 +173,8 @@ void printAll()
   // //
   // Serial.println("----------END DATA----------");
   // Serial.println();
-  Serial.println("Orientation: x: " + String(bno055_getOrientation().x) + " y: " + String(bno055_getOrientation().y) + " z: " + String(bno055_getOrientation().z) + " degrees");
+  // Serial.println("Orientation: x: " + String(bno055_getOrientation().x) + " y: " + String(bno055_getOrientation().y) + " z: " + String(bno055_getOrientation().z) + " degrees");
   // Serial.println("Linear Acceleration: x: " + String(bno055_getLinearAcceleration().x) + " y: " + String(bno055_getLinearAcceleration().y) + " z: " + String(bno055_getLinearAcceleration().z) + " m/s^2");
-  delay(100);
 }
 
 void logData()

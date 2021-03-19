@@ -13,15 +13,19 @@ double prevTime;
 */
 bool checkEngineCutOff(double acceleration)
 {
-    if (acceleration > maxAcceleration)
-    {
-        maxAcceleration = acceleration;
-    }
-    // Checks to see if acceleration has dipped with a leniancy value
-    else if (acceleration < maxAcceleration - (maxAcceleration * alpha))
+    if (acceleration < -2)
     {
         return true;
     }
+    // if (acceleration < -1)
+    // {
+    //     maxAcceleration = acceleration;
+    // }
+    // // Checks to see if acceleration has dipped with a leniancy value
+    // else if (acceleration < maxAcceleration - (maxAcceleration * alpha))
+    // {
+    //     return true;
+    // }
 }
 
 void initCalculationValues()
@@ -30,7 +34,7 @@ void initCalculationValues()
     prevVelocity.y = 0;
     prevVelocity.z = 0;
     prevTime = millis();
-    
+
     alpha = .05;
     maxAcceleration = 0;
 }
@@ -40,9 +44,9 @@ void initCalculationValues()
 Triple calcVelocity(Triple acceleration)
 {
     Triple velocity;
-    velocity.x = prevVelocity.x + ((acceleration.x) * (millis() - prevTime));
-    velocity.y = prevVelocity.y + ((acceleration.y) * (millis() - prevTime));
-    velocity.z = prevVelocity.z + ((acceleration.z) * (millis() - prevTime));
+    velocity.x = prevVelocity.x + ((acceleration.x) * ((millis() - prevTime) / 1000));
+    velocity.y = prevVelocity.y + ((acceleration.y) * ((millis() - prevTime) / 1000));
+    velocity.z = prevVelocity.z + ((acceleration.z) * ((millis() - prevTime) / 1000));
 
     prevTime = millis();
     double prevVelocity_X = velocity.x;
