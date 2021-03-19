@@ -4,8 +4,11 @@
 Triple init_acceleration;
 Triple init_velocity;
 double init_altitude;
-double init_angle;
-
+Triple init_angle;
+double calcVerticalVelocity(Triple velocity, Triple angle)
+{
+    
+}
 bool checkDeployFins(Triple curr_velocity, Triple curr_acceleration, double curr_altitude, Triple curr_angle)
 {
     //Dimensions and Properties
@@ -24,8 +27,8 @@ bool checkDeployFins(Triple curr_velocity, Triple curr_acceleration, double curr
     double B = 0.5 * rho * S * cd; // [m^2*s^-2] Drag Constant
 
     //TODO FIX to get correct velocity
-    // double a = B * init_velocity * init_velocity;
-    double a = 0;
+    double a = B * init_velocity.x * init_velocity.x;
+    // double a = 0;
 
     double b = pow(e, (2 * B) / (m * dy));
 
@@ -54,7 +57,7 @@ bool checkDeployFins(Triple curr_velocity, Triple curr_acceleration, double curr
     //     return false;
     // }
 }
-void setInitialConditions(Triple curr_velocity, Triple curr_acceleration, double curr_altitude, double curr_angle)
+void setInitialConditions(Triple curr_velocity, Triple curr_acceleration, double curr_altitude, Triple curr_angle)
 {
     init_velocity.x = curr_velocity.x;
     init_velocity.y = curr_velocity.y;
@@ -63,6 +66,10 @@ void setInitialConditions(Triple curr_velocity, Triple curr_acceleration, double
     init_acceleration.x = curr_acceleration.x;
     init_acceleration.y = curr_acceleration.y;
     init_acceleration.y = curr_acceleration.z;
+
+    init_angle.x = curr_angle.x;
+    init_angle.y = curr_angle.y;
+    init_angle.z = curr_angle.z;
 
     init_altitude = curr_altitude;
     init_angle = curr_angle;
